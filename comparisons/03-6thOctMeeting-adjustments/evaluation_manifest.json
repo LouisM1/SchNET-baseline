@@ -1,0 +1,25 @@
+{
+  "split": "validation",
+  "data_path": "data/valid.xyz",
+  "data_sha256": "5610becf9e88f82b4f0f68a2d34f5e1316f14e18e6ad61b0ded7c64630e757b6",
+  "n_structures": 50,
+  "device": "cpu",
+  "graph_pes_version": "1.0.2",
+  "torch_version": "2.6.0",
+  "energy_units": "eV; per-atom metrics displayed in meV/atom",
+  "force_units": "eV/\u00c5",
+  "runs": {
+    "02 \u00b7 Plateau / fixed offset": {
+      "run": "lr-plateau-9002262",
+      "model_sha256": "275b6f3493f2eaeb67708f24c5b5a48a08b4e71e61047e8100c954127e7b19f5",
+      "config_sha256": "3b2f01b7650b03d2cb9b35ff85d93ac7d209daa93cb97ae0c377b5514307e2d2",
+      "evaluation_seconds": 0.8146565419738181
+    },
+    "03 \u00b7 Equal weights / learned offset": {
+      "run": "lossratio_and_learnedOffsets-9004704",
+      "model_sha256": "f59ec28ab17065aa2adaa1d14af9f2a9349d69c1aa96735d929bbf20916ce31f",
+      "config_sha256": "4a0a51f1df493ffeb700d45856ae12cd24e435942c90ffd0368458b635df43ee",
+      "evaluation_seconds": 1.5238917919923551
+    }
+  }
+}

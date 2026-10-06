@@ -1,0 +1,7 @@
+Model,Quantity,Units,MAE,RMSE
+02 · Plateau / fixed offset,Total energy,eV,1.0220602800000052,1.147815289273047
+02 · Plateau / fixed offset,Energy per atom,meV/atom,7.097640833333369,7.970939508840605
+02 · Plateau / fixed offset,Force components,eV/Å,0.11863651065324497,0.1763443794176782
+03 · Equal weights / learned offset,Total energy,eV,0.4062531599997601,0.504389025021324
+03 · Equal weights / learned offset,Energy per atom,meV/atom,2.821202499998334,3.502701562648084
+03 · Equal weights / learned offset,Force components,eV/Å,0.12091171164610293,0.17977705368865649

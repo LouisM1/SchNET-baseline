@@ -1,0 +1,3 @@
+Model,Energy per atom MAE (meV/atom),Energy per atom RMSE (meV/atom),Force components MAE (eV/Å),Force components RMSE (eV/Å)
+02 · Plateau / fixed offset,7.097640833333369,7.970939508840605,0.11863651065324497,0.1763443794176782
+03 · Equal weights / learned offset,2.821202499998334,3.502701562648084,0.12091171164610293,0.17977705368865649
