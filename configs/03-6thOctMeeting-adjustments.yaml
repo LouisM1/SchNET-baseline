@@ -1,0 +1,57 @@
+# CPU by default; the ARC template job overrides this to GPU.
+CUTOFF: 5.0
+general:
+  seed: 42
+  progress: logged
+
+model:
+  offset: +LearnableOffset()
+  schnet:
+    +SchNet:
+      cutoff: =/CUTOFF
+      layers: 3
+      channels: 64
+      expansion_features: 50
+
+data:
+  train:
+    path: data/train.xyz
+    property_map: {QM_energy: energy, QM_forces: forces}
+  valid:
+    path: data/valid.xyz
+    property_map: {QM_energy: energy, QM_forces: forces}
+  # Evaluate test.xyz only after choosing the model using validation.
+  test: null
+
+loss:
+  energy: +PerAtomEnergyLoss()
+  forces:
+    +ForceRMSE:
+      weight: 1.0
+
+fitting:
+  trainer_kwargs:
+    accelerator: cpu
+    devices: 1
+    max_epochs: 300
+    log_every_n_steps: 10
+  loader_kwargs:
+    batch_size: 4
+    num_workers: 0
+    persistent_workers: false
+  optimizer:
+    name: AdamW
+    lr: 0.001
+  scheduler:
+    name: ReduceLROnPlateau
+    patience: 25
+    factor: 0.8
+  early_stopping:
+    patience: 100
+  keep: best
+
+wandb:
+  entity: trin4011-university-of-oxford
+  project: transfer-learning
+  name: experiment_NUMBER
+  log_model: false

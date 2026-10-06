@@ -1,0 +1,273 @@
+[graph-pes INFO]: Logging to graph-pes-results/lossratio_and_learnedOffsets-9004704/rank-0.log
+[graph-pes INFO]: ID for this training run: lossratio_and_learnedOffsets-9004704
+[graph-pes INFO]: 
+Output for this training run can be found at:
+    └─ graph-pes-results/lossratio_and_learnedOffsets-9004704
+        ├─ rank-0.log         # find a verbose log here
+        ├─ model.pt           # the best model (according to valid/loss/total)
+        ├─ lammps_model.pt    # the best model deployed to LAMMPS
+        ├─ train-config.yaml  # the complete config used for this run
+        └─ summary.yaml       # the summary of the training run
+
+[graph-pes DEBUG]: 
+Logging using WandbLogger(
+  entity="trin4011-university-of-oxford",
+  project="transfer-learning",
+  name="lossratio_and_learnedOffsets-9004704",
+  log_model=False,
+  id="lossratio_and_learnedOffsets-9004704",
+  save_dir="graph-pes-results"
+)
+
+[graph-pes DEBUG]: Callbacks: [OffsetLogger(root=graph-pes-results/lossratio_and_learnedOffsets-9004704), ScalesLogger(root=graph-pes-results/lossratio_and_learnedOffsets-9004704), <graph_pes.training.callbacks.ModelTimer object at 0x14ef40c31b50>, SaveBestModel(root=graph-pes-results/lossratio_and_learnedOffsets-9004704), <graph_pes.training.callbacks.LoggedProgressBar object at 0x14ef40e8f8d0>, <pytorch_lightning.callbacks.lr_monitor.LearningRateMonitor object at 0x14ef4194a2d0>, EarlyStoppingWithLogging(root=graph-pes-results/lossratio_and_learnedOffsets-9004704), <pytorch_lightning.callbacks.model_checkpoint.ModelCheckpoint object at 0x14ef40c47e10>, <pytorch_lightning.callbacks.model_checkpoint.ModelCheckpoint object at 0x14ef40b5d4d0>]
+[graph-pes DEBUG]: 
+Model:
+AdditionModel(
+  offset=LearnableOffset(trainable=True),
+  schnet=SchNet(
+    chemical_embedding=PerElementEmbedding(dim=64, elements=[]),
+    interactions=UniformModuleList(
+      (0-2): 3 x SchNetInteraction(
+        (linear): Linear(in_features=64, out_features=64, bias=False)
+        (cfconv): CFConv(
+          Sequential(
+            (0): GaussianSmearing(n_features=50, cutoff=5.0, trainable=True)
+            (1): MLP(50 → 64 → 64, activation=ShiftedSoftplus())
+          )
+        )
+        (mlp): MLP(64 → 64 → 64, activation=ShiftedSoftplus())
+      )
+    ),
+    read_out=MLP(64 → 32 → 1, activation=ShiftedSoftplus()),
+    scaler=LocalEnergiesScaler(trainable=True)
+  )
+)
+
+[graph-pes DEBUG]: 
+Data:
+DatasetCollection(
+  train=ASEToGraphDataset(800, properties=['forces', 'energy']),
+  valid=ASEToGraphDataset(50, properties=['forces', 'energy'])
+)
+
+[graph-pes DEBUG]: 
+Optimizer:
+Optimizer(name="AdamW", lr=0.001)
+
+[graph-pes DEBUG]: 
+Scheduler:
+LRScheduler(
+  name="ReduceLROnPlateau",
+  patience=25,
+  factor=0.8
+)
+
+[graph-pes DEBUG]: 
+Total loss:
+TotalLoss:
+PerAtomEnergyLoss("energy", metric=RMSE())
+ForceRMSE("forces", metric=RMSE())
+
+[graph-pes INFO]: Preparing data
+[graph-pes INFO]: Caching neighbour lists for 800 structures with cutoff 5.0, property mapping {'QM_energy': 'energy', 'QM_forces': 'forces'} and torch dtype torch.float32
+[graph-pes INFO]: Caching neighbour lists for 50 structures with cutoff 5.0, property mapping {'QM_energy': 'energy', 'QM_forces': 'forces'} and torch dtype torch.float32
+[graph-pes INFO]: Setting up datasets
+[graph-pes INFO]: Pre-fitting the model on 800 samples
+[graph-pes DEBUG]: Attempting to pre-fit LearnableOffset
+[graph-pes WARNING]: 
+We are attempting to guess the mean per-element
+contribution for a per-structure quantity (usually
+the total energy). 
+
+However, the composition of the training set is such that 
+no unique solution is possible. 
+
+This is probably because you are training on structures
+all with the same composition (e.g. all structures are
+of the form n H2O). Consider explicitly setting the
+per-element contributions if you know them, or
+including a variety of structures of different
+compositions in the training set.
+
+[graph-pes DEBUG]: Per-element means: {8: -421.2230529785156, 14: -210.6115264892578}
+[graph-pes DEBUG]: Per-element variances: {8: 1.7598543167114258, 14: 0.879980742931366}
+[graph-pes WARNING]: 
+Estimated per-element energy offsets from the training data:
+    PerElementParameter(trainable=True)
+This will lead to a lack of guaranteed physicality in the model, 
+since the energy of an isolated atom (and hence the behaviour of 
+this model in the dissociation limit) is not guaranteed to be 
+correct. Use a FixedOffset energy offset model if you require
+and know the reference energy offsets.
+
+[graph-pes DEBUG]: Attempting to pre-fit SchNet
+[graph-pes WARNING]: 
+We are attempting to guess the mean per-element
+contribution for a per-structure quantity (usually
+the total energy). 
+
+However, the composition of the training set is such that 
+no unique solution is possible. 
+
+This is probably because you are training on structures
+all with the same composition (e.g. all structures are
+of the form n H2O). Consider explicitly setting the
+per-element contributions if you know them, or
+including a variety of structures of different
+compositions in the training set.
+
+[graph-pes DEBUG]: Per-element means: {8: -421.2230529785156, 14: -210.6115264892578}
+[graph-pes DEBUG]: Per-element variances: {8: 1.7598543167114258, 14: 0.879980742931366}
+[graph-pes DEBUG]: 
+Model:
+AdditionModel(
+  offset=LearnableOffset({'O': -421.0, 'Si': -211.0}, trainable=True),
+  schnet=SchNet(
+    chemical_embedding=PerElementEmbedding(dim=64, elements=['O', 'Si']),
+    interactions=UniformModuleList(
+      (0-2): 3 x SchNetInteraction(
+        (linear): Linear(in_features=64, out_features=64, bias=False)
+        (cfconv): CFConv(
+          Sequential(
+            (0): GaussianSmearing(n_features=50, cutoff=5.0, trainable=True)
+            (1): MLP(50 → 64 → 64, activation=ShiftedSoftplus())
+          )
+        )
+        (mlp): MLP(64 → 64 → 64, activation=ShiftedSoftplus())
+      )
+    ),
+    read_out=MLP(64 → 32 → 1, activation=ShiftedSoftplus()),
+    scaler=LocalEnergiesScaler({'O': 1.33, 'Si': 0.938}, trainable=True)
+  )
+)
+
+[graph-pes INFO]: 
+Number of learnable params:
+    offset (LearnableOffset): 2
+    schnet (SchNet)         : 61,916
+
+[graph-pes INFO]: Sanity checking the model...
+[graph-pes INFO]: Starting fit...
+[graph-pes DEBUG]: 
+Using LR scheduler config:
+{'interval': 'epoch', 'frequency': 1, 'monitor': 'valid/loss/total', 'strict': True}
+
+[graph-pes DEBUG]: New best model: validation loss 1.4937289953231812
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.5594719052314758
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.4810881018638611
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.4458596408367157
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.39195311069488525
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.3372343182563782
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.31316402554512024
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.302592396736145
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.2782418429851532
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.2630355954170227
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.2621892988681793
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.2477211207151413
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.2449476569890976
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.23853211104869843
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.23523284494876862
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.22560377418994904
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.22291462123394012
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.22264821827411652
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.21527594327926636
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.21471937000751495
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.21364939212799072
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.21345971524715424
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.21095329523086548
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.2074413150548935
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.20071977376937866
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.19654540717601776
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.19213126599788666
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.18872028589248657
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.1875833123922348
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.18476717174053192
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.18442802131175995
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.18416738510131836
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.1830737143754959
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.18207474052906036
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.1781703531742096
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.17678825557231903
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.17672333121299744
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.17598703503608704
+[graph-pes DEBUG]: Model saved to graph-pes-results/lossratio_and_learnedOffsets-9004704/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/lossratio_and_learnedOffsets-9004704/lammps_model.pt
+[graph-pes INFO]: Loading best weights from "/data/oums-atom-elec-ml/trin4011/SchNET/graph-pes-results/lossratio_and_learnedOffsets-9004704/checkpoints/best.ckpt"
+[graph-pes INFO]: Training complete.
+[graph-pes INFO]: Testing best model...
+[graph-pes INFO]: Testing complete.
+[graph-pes INFO]: Awaiting final Lightning and W&B shutdown...
