@@ -44,6 +44,7 @@ fitting:
   optimizer:
     name: AdamW
     lr: 0.001
+  scheduler: null
   early_stopping:
     patience: 100
   keep: best

@@ -44,8 +44,12 @@ fitting:
   optimizer:
     name: AdamW
     lr: 0.001
+  scheduler:
+    name: ReduceLROnPlateau
+    patience: 25
+    factor: 0.8
   early_stopping:
-    patience: 30
+    patience: 100
   keep: best
 
 wandb:
