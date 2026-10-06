@@ -1,0 +1,212 @@
+[graph-pes INFO]: Logging to graph-pes-results/experiment-8994966/rank-0.log
+[graph-pes INFO]: ID for this training run: experiment-8994966
+[graph-pes INFO]: 
+Output for this training run can be found at:
+    └─ graph-pes-results/experiment-8994966
+        ├─ rank-0.log         # find a verbose log here
+        ├─ model.pt           # the best model (according to valid/loss/total)
+        ├─ lammps_model.pt    # the best model deployed to LAMMPS
+        ├─ train-config.yaml  # the complete config used for this run
+        └─ summary.yaml       # the summary of the training run
+
+[graph-pes DEBUG]: 
+Logging using WandbLogger(
+  entity="trin4011-university-of-oxford",
+  project="transfer-learning",
+  name="experiment_NUMBER",
+  log_model=False,
+  id="experiment-8994966",
+  save_dir="graph-pes-results"
+)
+
+[graph-pes DEBUG]: Callbacks: [OffsetLogger(root=graph-pes-results/experiment-8994966), ScalesLogger(root=graph-pes-results/experiment-8994966), <graph_pes.training.callbacks.ModelTimer object at 0x1477bc3a2f90>, SaveBestModel(root=graph-pes-results/experiment-8994966), <graph_pes.training.callbacks.LoggedProgressBar object at 0x1477bc3bd4d0>, <pytorch_lightning.callbacks.lr_monitor.LearningRateMonitor object at 0x1477bc3a2390>, EarlyStoppingWithLogging(root=graph-pes-results/experiment-8994966), <pytorch_lightning.callbacks.model_checkpoint.ModelCheckpoint object at 0x1477bd629c10>, <pytorch_lightning.callbacks.model_checkpoint.ModelCheckpoint object at 0x1477bcc015d0>]
+[graph-pes DEBUG]: 
+Model:
+AdditionModel(
+  offset=FixedOffset({'O': 0.0, 'Si': -1050.0}, trainable=False),
+  schnet=SchNet(
+    chemical_embedding=PerElementEmbedding(dim=64, elements=[]),
+    interactions=UniformModuleList(
+      (0-2): 3 x SchNetInteraction(
+        (linear): Linear(in_features=64, out_features=64, bias=False)
+        (cfconv): CFConv(
+          Sequential(
+            (0): GaussianSmearing(n_features=50, cutoff=5.0, trainable=True)
+            (1): MLP(50 → 64 → 64, activation=ShiftedSoftplus())
+          )
+        )
+        (mlp): MLP(64 → 64 → 64, activation=ShiftedSoftplus())
+      )
+    ),
+    read_out=MLP(64 → 32 → 1, activation=ShiftedSoftplus()),
+    scaler=LocalEnergiesScaler(trainable=True)
+  )
+)
+
+[graph-pes DEBUG]: 
+Data:
+DatasetCollection(
+  train=ASEToGraphDataset(800, properties=['forces', 'energy']),
+  valid=ASEToGraphDataset(50, properties=['forces', 'energy'])
+)
+
+[graph-pes DEBUG]: 
+Optimizer:
+Optimizer(name="AdamW", lr=0.001)
+
+[graph-pes DEBUG]: 
+Scheduler:
+No LR scheduler.
+
+[graph-pes DEBUG]: 
+Total loss:
+TotalLoss:
+PerAtomEnergyLoss("energy", metric=RMSE())
+ForceRMSE("forces", metric=RMSE())
+
+[graph-pes INFO]: Preparing data
+[graph-pes INFO]: Caching neighbour lists for 800 structures with cutoff 5.0, property mapping {'QM_energy': 'energy', 'QM_forces': 'forces'} and torch dtype torch.float32
+[graph-pes INFO]: Caching neighbour lists for 50 structures with cutoff 5.0, property mapping {'QM_energy': 'energy', 'QM_forces': 'forces'} and torch dtype torch.float32
+[graph-pes INFO]: Setting up datasets
+[graph-pes INFO]: Pre-fitting the model on 800 samples
+[graph-pes DEBUG]: Attempting to pre-fit FixedOffset
+[graph-pes DEBUG]: Attempting to pre-fit SchNet
+[graph-pes WARNING]: 
+We are attempting to guess the mean per-element
+contribution for a per-structure quantity (usually
+the total energy). 
+
+However, the composition of the training set is such that 
+no unique solution is possible. 
+
+This is probably because you are training on structures
+all with the same composition (e.g. all structures are
+of the form n H2O). Consider explicitly setting the
+per-element contributions if you know them, or
+including a variety of structures of different
+compositions in the training set.
+
+[graph-pes DEBUG]: Per-element means: {8: -421.2230529785156, 14: -210.6115264892578}
+[graph-pes DEBUG]: Per-element variances: {8: 1.7598543167114258, 14: 0.879980742931366}
+[graph-pes DEBUG]: 
+Model:
+AdditionModel(
+  offset=FixedOffset({'O': 0.0, 'Si': -1050.0}, trainable=False),
+  schnet=SchNet(
+    chemical_embedding=PerElementEmbedding(dim=64, elements=['O', 'Si']),
+    interactions=UniformModuleList(
+      (0-2): 3 x SchNetInteraction(
+        (linear): Linear(in_features=64, out_features=64, bias=False)
+        (cfconv): CFConv(
+          Sequential(
+            (0): GaussianSmearing(n_features=50, cutoff=5.0, trainable=True)
+            (1): MLP(50 → 64 → 64, activation=ShiftedSoftplus())
+          )
+        )
+        (mlp): MLP(64 → 64 → 64, activation=ShiftedSoftplus())
+      )
+    ),
+    read_out=MLP(64 → 32 → 1, activation=ShiftedSoftplus()),
+    scaler=LocalEnergiesScaler({'O': 1.33, 'Si': 0.938}, trainable=True)
+  )
+)
+
+[graph-pes INFO]: 
+Number of learnable params:
+    offset (FixedOffset): 0
+    schnet (SchNet)     : 61,916
+
+[graph-pes INFO]: Sanity checking the model...
+[graph-pes INFO]: Starting fit...
+[graph-pes DEBUG]: New best model: validation loss 6.4625420570373535
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 2.5513596534729004
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 2.2862355709075928
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 1.9507931470870972
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 1.5436495542526245
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 1.4106476306915283
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 1.3388835191726685
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 1.287508487701416
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 1.1915321350097656
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 1.1777477264404297
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 1.1225204467773438
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 1.107118844985962
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 1.084181547164917
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 1.0805965662002563
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 1.071227788925171
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 1.0576934814453125
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 1.035169243812561
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 1.0122703313827515
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.9837380051612854
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.9828184247016907
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.975831151008606
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.9453737735748291
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.9308723211288452
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.9125513434410095
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.9082056283950806
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.906581699848175
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.8808600902557373
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.8738155364990234
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes DEBUG]: New best model: validation loss 0.8717958927154541
+[graph-pes DEBUG]: Model saved to graph-pes-results/experiment-8994966/model.pt
+[graph-pes DEBUG]: Deployed model for use with LAMMPS to graph-pes-results/experiment-8994966/lammps_model.pt
+[graph-pes INFO]: Loading best weights from "/data/oums-atom-elec-ml/trin4011/SchNET-baseline/graph-pes-results/experiment-8994966/checkpoints/best.ckpt"
+[graph-pes INFO]: Training complete.
+[graph-pes INFO]: Testing best model...
+[graph-pes INFO]: Testing complete.
+[graph-pes INFO]: Awaiting final Lightning and W&B shutdown...

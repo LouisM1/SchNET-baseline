@@ -1,0 +1,72 @@
+CUTOFF: 5.0
+data:
+  test: null
+  train:
+    path: data/train.xyz
+    property_map:
+      QM_energy: energy
+      QM_forces: forces
+  valid:
+    path: data/valid.xyz
+    property_map:
+      QM_energy: energy
+      QM_forces: forces
+fitting:
+  auto_fit_reference_energies: false
+  callbacks: []
+  early_stopping:
+    patience: 100
+  early_stopping_patience: null
+  keep: best
+  loader_kwargs:
+    batch_size: 4
+    num_workers: 0
+    persistent_workers: false
+    pin_memory: false
+  lr_warmup_steps: null
+  max_n_pre_fit: 5000
+  optimizer:
+    lr: 0.001
+    name: AdamW
+  pre_fit_model: true
+  scheduler:
+    factor: 0.8
+    name: ReduceLROnPlateau
+    patience: 25
+  swa: null
+  trainer_kwargs:
+    accelerator: gpu
+    devices: 1
+    enable_model_summary: false
+    log_every_n_steps: 10
+    max_epochs: 300
+general:
+  log_level: INFO
+  progress: logged
+  root_dir: graph-pes-results
+  run_id: lr-plateau-9002262
+  seed: 42
+  torch:
+    dtype: float32
+    float32_matmul_precision: high
+loss:
+  energy: +PerAtomEnergyLoss()
+  forces:
+    +ForceRMSE:
+      weight: 5.0
+model:
+  offset:
+    +FixedOffset:
+      O: 0.0
+      Si: -1053.057946470156
+  schnet:
+    +SchNet:
+      channels: 64
+      cutoff: 5.0
+      expansion_features: 50
+      layers: 3
+wandb:
+  entity: trin4011-university-of-oxford
+  log_model: false
+  name: lr-plateau-9002262
+  project: transfer-learning
