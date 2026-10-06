@@ -1,0 +1,3 @@
+Model,Run,Seed,Completed epochs,Initial LR,Final logged LR,Best logged validation loss,W&B runtime (min)
+Constant LR,lr-control-9002261,42,300,0.001,0.001,0.8479436635971069,23.67411663775
+Plateau scheduler,lr-plateau-9002262,42,300,0.001,0.0004096000000000001,0.8542815446853638,23.28873904876667

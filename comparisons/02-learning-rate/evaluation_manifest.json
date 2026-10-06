@@ -1,0 +1,25 @@
+{
+  "split": "validation",
+  "data_path": "data/valid.xyz",
+  "data_sha256": "5610becf9e88f82b4f0f68a2d34f5e1316f14e18e6ad61b0ded7c64630e757b6",
+  "n_structures": 50,
+  "device": "cpu",
+  "graph_pes_version": "1.0.2",
+  "torch_version": "2.6.0",
+  "energy_units": "eV; per-atom metrics displayed in meV/atom",
+  "force_units": "eV/\u00c5",
+  "runs": {
+    "Constant LR": {
+      "run": "lr-control-9002261",
+      "model_sha256": "8639cf916839b48b0422d0c4e04326bc3e82d93541252c882e45a4457191bb92",
+      "config_sha256": "d60ef76e06d63b259cdbd8cd20c1e83919bb802edf42334a104a20e4c2fbf64e",
+      "evaluation_seconds": 0.7097695839474909
+    },
+    "Plateau scheduler": {
+      "run": "lr-plateau-9002262",
+      "model_sha256": "275b6f3493f2eaeb67708f24c5b5a48a08b4e71e61047e8100c954127e7b19f5",
+      "config_sha256": "3b2f01b7650b03d2cb9b35ff85d93ac7d209daa93cb97ae0c377b5514307e2d2",
+      "evaluation_seconds": 0.6682597910403274
+    }
+  }
+}
